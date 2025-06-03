@@ -24,9 +24,9 @@ app.post('/create-session', async (req, res) => {
 
     sessions[id] = { client };
 
-    client.on('qr', async qr => {
-        const qrData = await qrcode.toDataURL(qr);
-        sessions[id].qr = qrData;
+    client.on('qr', (qr) => {
+        console.log('QR RECEIVED', qr);
+        sessions[sessionId].qr = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qr)}&size=300x300`;
     });
 
     client.on('ready', () => {
@@ -51,10 +51,14 @@ app.get('/qr/:id', (req, res) => {
 });
 
 // Check Session Status
-app.get('/status/:id', (req, res) => {
+app.get('/status/:id', async (req, res) => {
     const session = sessions[req.params.id];
     if (!session) return res.status(404).json({ error: 'Session not found' });
-    res.json({ ready: session.ready || false });
+
+    res.json({
+        status: session.ready ? 'authenticated' : 'pending',
+        qr: session.qr || null,
+    });
 });
 
 // Logout
