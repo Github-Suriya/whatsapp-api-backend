@@ -1,26 +1,21 @@
 {
-  "name": "whatsapp-api-backend",
+  "name": "whatsapp-api-railway",
   "version": "1.0.0",
-  "description": "Full-stack WhatsApp API using whatsapp-web.js and Express",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
-    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "whatsapp-web.js": "^1.22.1"
-  },
-  "engines": {
-    "node": ">=16"
-  },
-  "keywords": [
-    "whatsapp",
-    "express",
-    "api",
-    "whatsapp-web.js"
-  ],
-  "author": "Suriya M",
-  "license": "MIT"
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "qrcode": "^1.5.4",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.30.0"
+  }
 }
