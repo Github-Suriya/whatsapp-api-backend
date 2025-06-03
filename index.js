@@ -59,17 +59,40 @@ app.get('/status/:id', (req, res) => {
 
 // Logout
 app.post('/logout', async (req, res) => {
-    const { id } = req.body;
-    const session = sessions[id];
-    if (!session) return res.status(404).json({ error: 'Session not found' });
+  const { id } = req.body;
 
-    await session.client.logout();
+  if (!sessions[id]) {
+    return res.status(404).json({ error: 'Session not found' });
+  }
+
+  try {
+    await sessions[id].client.logout();
     delete sessions[id];
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+  } catch (err) {
+    console.error('Logout error:', err);
+    res.status(500).json({ error: 'Failed to logout' });
+  }
+});
 
-    const sessionPath = path.join(__dirname, 'sessions', id);
-    fs.rmdirSync(sessionPath, { recursive: true });
+// Send Message
+app.post('/send-message', async (req, res) => {
+  const { id, number, message } = req.body;
 
-    res.json({ message: 'Logged out' });
+  if (!sessions[id]) {
+    return res.status(404).json({ error: 'Session not found' });
+  }
+
+  try {
+    const formattedNumber = number.includes('@c.us') ? number : `${number}@c.us`;
+    const client = sessions[id].client;
+
+    await client.sendMessage(formattedNumber, message);
+    res.status(200).json({ success: true, message: 'Message sent successfully' });
+  } catch (err) {
+    console.error('Send Message Error:', err);
+    res.status(500).json({ error: 'Failed to send message' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
